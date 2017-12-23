@@ -1,0 +1,127 @@
+{
+	"captureMode": {
+		"description": "1-monocular, 2-stereo, default is 1.",
+		"type": "int",
+		"value": 2
+	},
+	"listDevices": {
+		"description": "Enable(1)/Disable(0) display devices available, default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"extSyncEnabled": {
+		"description": "Enable(1)/Disable(0) external trigger, default is 0.",
+		"type": "int",		
+		"value": 0
+	},
+	"autoExposureEnabled": {
+		"description": "Enable(1)/Disable(0) auto-exposure, default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"expTime_us": {
+		"description": "Manually set exposure time in uS, only work when auto-exposure is disabled, default is 30000 uS.",
+		"type": "int",
+		"value": 30000
+	},
+	"expTimeMax_us": {
+		"description": "Maximum exposure time, in uS, work when auto-exposure is enabled, default is 100000 uS.",
+		"type": "int",		
+		"value": 100000
+	},
+	"masterId": {
+		"description": "Master ID, default is 0.",
+		"type": "int",
+		"value": 0
+	},	
+	"masterTrigOut": {
+		"description": "Master TriggerOut Pin, default is 1.",
+		"type": "int",
+		"value": 1
+	},	
+	"masterTrigIn": {
+		"description": "Master TriggerIn Pin, default is 5.",
+		"type": "int",		
+		"value": 5
+	},
+	"slaveId": {
+		"description": "Slave ID, default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"slaveTrigIn": {
+		"description": "Master TriggerIn Pin, default is 1.",
+		"type": "int",
+		"value": 5
+	},		
+	"triggerFrequency_Hz": {
+		"description": "Image capture frame rate (Hz), default is 10.",
+		"type": "int",
+		"value": 5
+	},
+	"nImagePairs": {
+		"description": "Number of image pairs to acquire, default is 0(continuous).",
+		"type": "int",
+		"value": 0	
+	},
+	"outdir": {
+		"description": "Image Output directory. Change Default value to your desired directory.",
+		"type": "string",
+		"value": "C:/Users/xiahaa/workspace/data/offline"
+	},
+	"writeLogEnabled": {
+		"description": "Enable(1)/Disable(0) Logging to file. Default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"bmpEnabled": {
+		"description": "Storage to BMP files enabled.0-save png file, 1-save bmp file. Default is 0.",
+		"type": "int",
+		"value": 1
+	},
+	"logInterval": {
+		"description": "Logging interval. Default is 10.",
+		"type": "int",
+		"value": 10
+	},	
+	"displayInterval": {
+		"description": "Statistics display interval. Default is 10.",
+		"type": "int",
+		"value": 10
+	},
+	"pngCompression": {
+		"description": "PNG Compression ratio, 0-9. Default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"imageThreads": {
+		"description": "Number of threads for image storage. Default is 6.",
+		"type": "int",
+		"value": 6
+	},
+	"decimFactor": {
+		"description": "Decimation factor:1,2,4,8. Default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"gnssPortname": {
+		"description": "GNSS Receiver Portname, DO NOT SUPPORT NOW. Default is /dev/ttyACM0.",
+		"type": "string",
+		"value": "=/dev/ttyACM0"
+	},	
+	"binningFactor": {
+		"description": "Binning factor:1,2,4,8. Default is 1.",
+		"type": "int",
+		"value": 1
+	},
+	"samplingMode": {
+		"description": "Sampling Mode only for monocular capture: 1-with external borad, 2-standalone. Default is 2.",
+		"type": "int",
+		"value": 2
+	},
+	"autoSave": {
+		"description": "automatical save image(1) or manual save image(0), default is 1.",
+		"type": "int",
+		"value": 1
+	}
+}

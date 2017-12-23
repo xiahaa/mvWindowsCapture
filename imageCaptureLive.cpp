@@ -3,6 +3,7 @@
 #include <iostream>
 #include "imageCaptureLive.h"
 #include "propertyList.h"
+#include "datatype.h"
 #include <mvIMPACT_CPP/mvIMPACT_acquire_GenICam.h>
 
 #ifdef BUILD_WITH_OPENCV_SUPPORT
@@ -244,9 +245,7 @@ void displayImage(CaptureParameter* pCaptureParameter, Request* pRequest)
 		exit(42);
 		break;
 	}
-
-	//std::cout<<"capture frequency"<<pRequest->
-
+	
 	//cv::Mat  openCVImage(cv::Size(pRequest->imageWidth.read(), pRequest->imageHeight.read()), CV_8UC1);
 	//memcpy(openCVImage.data, pRequest->imageData.read(), openCVImage.rows*openCVImage.cols * 1);
 
@@ -254,6 +253,24 @@ void displayImage(CaptureParameter* pCaptureParameter, Request* pRequest)
 	cv::namedWindow(pCaptureParameter->openCVDisplayTitle, cv::WINDOW_NORMAL);
 	cv::resizeWindow(pCaptureParameter->openCVDisplayTitle, 640, 480);
 	cv::imshow(pCaptureParameter->openCVDisplayTitle, openCVImage);
+	
+	// storage
+	if (!pCaptureParameter->headerInit)
+	{
+		pCaptureParameter->pheaderMutex->try_lock();
+		pCaptureParameter->pheader->width = pRequest->imageWidth.read();
+		pCaptureParameter->pheader->height = pRequest->imageHeight.read();
+		pCaptureParameter->pheader->lineWidth = pRequest->imageLinePitch.read();
+		pCaptureParameter->pheader->bytesPerPixel = pRequest->imagePixelPitch.read();
+		pCaptureParameter->pheaderMutex->unlock();
+		pCaptureParameter->headerInit = true;
+		//FIFO_put(pCaptureParameter->pCbuf, (unsigned char*)&header, sizeof(imageHeader_t));
+	}
+
+	if(pCaptureParameter->headerInit)
+		FIFO_put(pCaptureParameter->pCbuf, (unsigned char*)pRequest->imageData.read(), 
+			openCVImage.rows*openCVImage.cols*pRequest->imagePixelPitch.read());
+
 	// OpenCV event handling: you need this!
 	cv::waitKey(5);
 	// apply Canny Edge detection and display the result too
@@ -437,6 +454,9 @@ unsigned int DMR_CALL liveLoop(void* pData)
 				// here we can display some statistical information every 100th image
 				if (cnt % 100 == 0)
 				{
+					cout << "image timestamp:" << pRequest->chunkTimestamp << endl;
+					// TODO, if this is valid, should use this to index image stored
+					cout << "image id:" << pThreadParameter->statistics.frameCount << endl;
 					cout << "exposure time" << pRequest->chunkExposureTime.read() << endl;
 					cout << "Info from " << pThreadParameter->pDev->serial.read()
 						<< ": " << pThreadParameter->statistics.framesPerSecond.name() << ": " << pThreadParameter->statistics.framesPerSecond.readS()
@@ -499,20 +519,26 @@ unsigned int DMR_CALL liveLoop(void* pData)
 	return 0;
 }
 
+HANDLE hThreadCapture = NULL;
+
 //-----------------------------------------------------------------------------
 void runLiveLoop(CaptureParameter& captureParams)
 //-----------------------------------------------------------------------------
 {
-	s_boTerminated = false;
 #if defined(linux) || defined(__linux) || defined(__linux__)
 	liveLoop(&captureParams);
 #else
 	// start the execution of the 'live' thread.
 	unsigned int dwThreadID = 0;
-	HANDLE hThread = (HANDLE)_beginthreadex(0, 0, liveLoop, (LPVOID)(&captureParams), 0, &dwThreadID);
-	cin.get();
-	s_boTerminated = true;
-	WaitForSingleObject(hThread, INFINITE);
-	CloseHandle(hThread);
+	hThreadCapture = (HANDLE)_beginthreadex(0, 0, liveLoop, (LPVOID)(&captureParams), 0, &dwThreadID);
+
 #endif // #if defined(linux) || defined(__linux) || defined(__linux__)
+}
+
+void endLiveLoop()
+{
+	s_boTerminated = true;
+
+	WaitForSingleObject(hThreadCapture, INFINITE);
+	CloseHandle(hThreadCapture);
 }

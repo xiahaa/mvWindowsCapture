@@ -7,11 +7,12 @@
 #   include <windows.h>
 #	include <cstdalign>
 #   include <process.h>
+#	include <mutex>
 #endif
+#include "datatype.h"
+#include "circularBuffer.h"
 
-/* always enable opencv support in my case */
-#define BUILD_WITH_OPENCV_SUPPORT
-//#define USE_MATRIXVISION_DISPLAY_API	
+
 
 using namespace mvIMPACT::acquire::display;
 
@@ -87,8 +88,16 @@ struct CaptureParameter
 	int                     bufferAlignment;
 	int                     bufferPitch;
 	CaptureBufferContainer  buffers;
-	CaptureParameter(Device* p) : pDev(p), fi(p), irc(p), statistics(p), boUserSuppliedMemoryUsed(false),
-		boAlwaysUseNewUserSuppliedBuffers(false), bufferSize(0), bufferAlignment(0), bufferPitch(0), buffers()
+
+	/* shared circular buffer */
+	struct FIFO				*pCbuf;
+	imageHeader_t			*pheader;
+	std::mutex				*pheaderMutex;
+	bool					headerInit;
+
+	CaptureParameter(Device* p, struct FIFO* sharedBuf, imageHeader_t *ph, std::mutex *pmutex) : pDev(p), fi(p), irc(p), statistics(p), boUserSuppliedMemoryUsed(false),
+		boAlwaysUseNewUserSuppliedBuffers(false), bufferSize(0), bufferAlignment(0), bufferPitch(0), buffers(),
+		pCbuf(sharedBuf), pheader(ph), pheaderMutex(pmutex), headerInit(false)
 	{
 #ifdef USE_MATRIXVISION_DISPLAY_API
 		// IMPORTANT: It's NOT save to create multiple display windows in multiple threads!!!
@@ -109,3 +118,4 @@ struct CaptureParameter
 };
 
 void runLiveLoop(CaptureParameter& captureParams);
+void endLiveLoop();
