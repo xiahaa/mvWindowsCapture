@@ -68,6 +68,7 @@ unsigned int imageEncodingThread(unsigned int tid, unsigned int compression, ato
 				LOG_INFO("INFO: encoding thread #%d %d", tid, rawFrame.id);
 			}
 
+			currFrame.isSave = rawFrame.isSave;
 			currFrame.cam = rawFrame.cam;
 			currFrame.id = rawFrame.id;
 			currFrame.decim = rawFrame.decim;
@@ -82,7 +83,7 @@ unsigned int imageEncodingThread(unsigned int tid, unsigned int compression, ato
 		
 			std::chrono::time_point<std::chrono::system_clock> t2 = std::chrono::system_clock::now();
 			std::chrono::duration<double> lapse = t2 - t1;
-			std::cout << "png compression time: " << lapse.count() << endl;
+			//std::cout << "png compression time: " << lapse.count() << endl;
 
 			queue.enqueue(currFrame);
 			encodingCnt++;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -50,7 +51,7 @@ do{ \
 	} \
 	else \
 	{ \
-		printf("No this config in mvCapture.json!!!!!\n"); \
+		printf("No this config %s in mvCapture.json!!!!!\n", #name); \
 	} \
 }while(0)
 
@@ -78,6 +79,7 @@ do{ \
 	FIND_AND_CONFIGURE_DIGITAL_ITEM(extSyncEnabled);
 	FIND_AND_CONFIGURE_DIGITAL_ITEM(autoExposureEnabled);
 	FIND_AND_CONFIGURE_DIGITAL_ITEM(listDevices);
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(isCaptureContinuous);
 
 	/* for string item */
 	FIND_AND_CONFIGURE_STRING_ITEM(gnssPortname);

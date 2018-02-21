@@ -66,7 +66,7 @@ inline void setupExposure(DeviceData* pDevData, bool autoEnabled = 1,
 			std::cout << "INFO: Using automatic exposure between " << minLimit_us
 				<< " and " << maxLimit_us << " uS." << std::endl;
 		}
-
+		//ac.mvExposureAutoAverageGrey.write(60);								// 
 	}
 	else
 	{

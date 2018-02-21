@@ -98,11 +98,14 @@ unsigned int imageStorageThread(unsigned int tid, string outDir, atomic<bool> &t
 #endif
 			}
 
-			std::ofstream file(fileNameC, std::ios::out | std::ios::binary);
-			if (file)
+			if (currFrame.isSave == 1)
 			{
-				file.write((char*)&currFrame.data[0], currFrame.data.size() * sizeof(uchar));
-				file.close();
+				std::ofstream file(fileNameC, std::ios::out | std::ios::binary);
+				if (file)
+				{
+					file.write((char*)&currFrame.data[0], currFrame.data.size() * sizeof(uchar));
+					file.close();
+				}
 			}
 
 #if USE_IMWRITE

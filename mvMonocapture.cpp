@@ -60,6 +60,9 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 	mvMonoCaptureParameters* pTreadParams = reinterpret_cast<mvMonoCaptureParameters*>(pThreadParams);
 
 	unsigned int cnt = 0;
+	unsigned int saveCnt = 0;
+
+	//ChunkDataControl *pChunk = new ChunkDataControl(pThreadParameter->pDev_);
 	// establish access to the statistic properties
 	Statistics* pSS = pThreadParameter->statistics();
 	// create an interface to the device found
@@ -120,7 +123,6 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 			if (pRequest->isOK()) {
 				//set frame parameters and data
 				currFrame.cam = camID;
-				currFrame.id = cnt;
 				currFrame.decim = decim;
 
 				image = cv::Mat(
@@ -131,17 +133,58 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 				currFrame.decim = 1;
 				currFrame.data = image.clone();
 
+				//currFrame.data.clear();
+				//cv::imencode(".png",image,currFrame.data);
+				if (pTreadParams->mvCapParams.isCaptureContinuous == 1)
+				{
+					currFrame.id = pRequest->infoFrameID.read();
+					currFrame.isSave = 1;
+					queue.enqueue(currFrame);
+					++cnt;
+				}
+				else
+				{
+					if (saveCnt != pTreadParams->syncSaveCnt)
+					{
+						saveCnt = pTreadParams->syncSaveCnt;
+						currFrame.id = cnt;
+						currFrame.isSave = 1;
+						queue.enqueue(currFrame);
+						++cnt;
+					}
+				}
+
 #if DISPLAY
 				cv::resize(currFrame.data, srcResize, cv::Size(640, 480), 0, 0, CV_INTER_LINEAR);
+				//currFrame.data.copyTo(srcResize);
+#endif
+
+#if	ENABLE_MANUAL_FOCUS
+				cv::Size size = currFrame.data.size();
+				cv::Mat laplacian(size.height, size.width, CV_16SC1);
+				cv::Laplacian(currFrame.data, laplacian, CV_16SC1, 1, 1, 0, cv::BORDER_DEFAULT);
+				cv::Scalar mean, std;
+				cv::meanStdDev(laplacian, mean, std);
+				stringstream varLapLSS;
+				varLapLSS << "VarOfLapL= " << std.val[0] * std.val[0];
+				cv::putText(srcResize, varLapLSS.str(),
+					cvPoint(50, 50), CV_FONT_HERSHEY_COMPLEX_SMALL,
+					2, cv::Scalar(255, 255, 255), 2, CV_AA);
+#endif
+
+#if DISPLAY
 				cv::imshow(winName, srcResize);
 				cv::waitKey(5);
 #endif
 
-				//currFrame.data.clear();
-				//cv::imencode(".png",image,currFrame.data);
-				queue.enqueue(currFrame);
-
-				++cnt;
+#if 0
+				// test to get device logged frame id
+				unsigned long long fcnt = pSS->frameCount.read();
+				cout << "frame count from mvcapture SDK: " << fcnt << endl;
+				cout << "chunk frame id: " << pChunk->chunkFrameID.read() << endl;
+				cout << "frame id: " << pRequest->infoFrameID.read() << endl;
+				cout << "frame Nr: " << pRequest->infoFrameNr.read() << endl;
+#endif
 
 				//display statistics (and write log) every Xth frame. Interval is controlled by the user from logInt and dispInt
 #if ENABLE_LOG

@@ -14,6 +14,7 @@ using namespace mvIMPACT::acquire::GenICam;
 enum __CAMERA_RUNNING_MODE {
 	MONOCULAR = 1,
 	STEREO = 2,
+	ARUCO = 3,
 };
 
 //-----------------------------------------------------------------------------
@@ -89,6 +90,7 @@ typedef struct __imageHeader_t
 //struct used fo queue content. Each frame has a cam number (0= left, 1=right)
 // and an ID relative to the current frame count.
 struct frame_t {
+	unsigned int isSave;
 	unsigned int cam;
 	unsigned int id;
 	unsigned int decim;
@@ -98,6 +100,7 @@ struct frame_t {
 
 typedef struct __raw_frame_t
 {
+	unsigned int isSave;
 	unsigned int cam;
 	unsigned int id;
 	unsigned int decim;
@@ -147,6 +150,7 @@ private:
 typedef struct __mvCaptureParams_t {
 public:
 	unsigned int captureMode;
+	unsigned int isCaptureContinuous;
 	unsigned int masterId;
 	unsigned int slaveId;
 	unsigned int masterTrigOut;
@@ -199,6 +203,7 @@ public:
 		extTrigIn(4),
 		extTrigOut(1), 
 		autoSave(0),
+		isCaptureContinuous(1),
 		bmpEnabled(false), 
 		displayStatsEnabled(true),
 		writeLogEnabled(true), extSyncEnabled(false), autoExposureEnabled(true),
@@ -209,6 +214,7 @@ public:
 		std::string str;
 		str = str + "********************************************************" + "\n" + \
 			"captureMode: " + (captureMode == MONOCULAR ? "MONO" : "STEREO") + "\n" \
+			"isCaptureContinuous: " + (isCaptureContinuous == 1 ? "Yes" : "No") + "\n" \
 			"masterId: " + std::to_string(masterId) + "\n" + \
 			"slaveId: " + std::to_string(slaveId) + "\n" + \
 			"masterTrigOut: " + std::to_string(masterTrigOut) + "\n" + \

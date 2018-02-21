@@ -2,7 +2,12 @@
 	"captureMode": {
 		"description": "1-monocular, 2-stereo, default is 1.",
 		"type": "int",
-		"value": 2
+		"value": 1
+	},
+	"isCaptureContinuous": {
+		"description": "1-continuous capture, 0-manual capture: press 'S' to capture, default is 1.",
+		"type": "int",
+		"value": 1
 	},
 	"listDevices": {
 		"description": "Enable(1)/Disable(0) display devices available, default is 1.",
@@ -27,7 +32,7 @@
 	"expTimeMax_us": {
 		"description": "Maximum exposure time, in uS, work when auto-exposure is enabled, default is 100000 uS.",
 		"type": "int",		
-		"value": 100000
+		"value": 50000
 	},
 	"masterId": {
 		"description": "Master ID, default is 0.",
@@ -57,7 +62,7 @@
 	"triggerFrequency_Hz": {
 		"description": "Image capture frame rate (Hz), default is 10.",
 		"type": "int",
-		"value": 5
+		"value": 1
 	},
 	"nImagePairs": {
 		"description": "Number of image pairs to acquire, default is 0(continuous).",
@@ -67,7 +72,7 @@
 	"outdir": {
 		"description": "Image Output directory. Change Default value to your desired directory.",
 		"type": "string",
-		"value": "C:/Users/xiahaa/workspace/data/offline"
+		"value": "C:/Users/xiahaa/workspace/data/offline1"
 	},
 	"writeLogEnabled": {
 		"description": "Enable(1)/Disable(0) Logging to file. Default is 1.",

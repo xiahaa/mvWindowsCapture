@@ -29,6 +29,10 @@
 
 #define DISPLAY					1
 
-#define CONFIG_FILE_DIR			"../mvCapture.json"
+#define CONFIG_FILE_DIR			"./mvCapture.json"
+
+#define ENABLE_MANUAL_FOCUS			0
+
+#define ENABLE_ARUCO_DETECTION	1
 
 #endif

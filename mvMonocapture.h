@@ -25,9 +25,10 @@ struct mvMonoCaptureParameters
 	//Each frame has an id (0= master/, 1=slave) according to the above struct
 	SafeQueue<raw_frame_t>	&rawImageQueue;
 	unsigned int			threadNum;
+	const unsigned int		&syncSaveCnt;
 
-	mvMonoCaptureParameters(mvCaptureParams_t &mvparams, std::string &dir, SafeQueue<raw_frame_t> &Queue, unsigned int trdNum) :
-		mvCapParams(mvparams), baseDir(dir), rawImageQueue(Queue), threadNum(trdNum)
+	mvMonoCaptureParameters(mvCaptureParams_t &mvparams, std::string &dir, SafeQueue<raw_frame_t> &Queue, unsigned int trdNum, unsigned int &cnt) :
+		mvCapParams(mvparams), baseDir(dir), rawImageQueue(Queue), threadNum(trdNum), syncSaveCnt(cnt)
 	{
 	}
 	~mvMonoCaptureParameters()
