@@ -47,7 +47,7 @@ inline void setupExposure(DeviceData* pDevData, bool autoEnabled = 1,
 	GenICam::AcquisitionControl ac(pDevData->device());
 	//TODO: The max limit should not necessarily be this low as it depends on aperture and other factors.
 	unsigned int maxLimit_us = 500000;
-	unsigned int minLimit_us = 50;
+	unsigned int minLimit_us = 4000;
 
 	//See: https://www.matrix-vision.com/manuals/mvBlueCOUGAR-X/Features_page.html#Features_section_AcquisitionControl
 	ac.acquisitionMode.writeS("Continuous");
@@ -66,7 +66,7 @@ inline void setupExposure(DeviceData* pDevData, bool autoEnabled = 1,
 			std::cout << "INFO: Using automatic exposure between " << minLimit_us
 				<< " and " << maxLimit_us << " uS." << std::endl;
 		}
-		//ac.mvExposureAutoAverageGrey.write(60);								// 
+		ac.mvExposureAutoAverageGrey.write(30);								// 
 	}
 	else
 	{

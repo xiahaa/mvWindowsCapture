@@ -35,4 +35,10 @@
 
 #define ENABLE_ARUCO_DETECTION	1
 
+#define CALI_FILE	"C:/Users/xiahaa/workspace/mvBlueFox/cali_param_2_22_12_24.yml"
+
+#define IS_TRACKING_ENABLE		1
+
+#define USE_OPENMP				1
+
 #endif

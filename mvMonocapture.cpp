@@ -113,7 +113,11 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 
 	string winName = "src" + std::to_string(camID);
 	cv::namedWindow(winName, cv::WINDOW_NORMAL);
+	cv::resizeWindow(winName, 640, 480);
+	cv::moveWindow(winName, 100, 100);
 	cv::Mat srcResize;
+
+	int deciCnt = 0;
 
 	while (threadRun && run) {
 		// wait for results from the default capture queue
@@ -135,25 +139,49 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 
 				//currFrame.data.clear();
 				//cv::imencode(".png",image,currFrame.data);
-				if (pTreadParams->mvCapParams.isCaptureContinuous == 1)
+				bool needEnque = false;
+				if (pTreadParams->mvCapParams.captureMode == CIRCULAR_PATTERN)
 				{
-					currFrame.id = pRequest->infoFrameID.read();
-					currFrame.isSave = 1;
-					queue.enqueue(currFrame);
-					++cnt;
-				}
-				else
-				{
-					if (saveCnt != pTreadParams->syncSaveCnt)
+					if (!pTreadParams->mvCapParams.axisSet)
 					{
-						saveCnt = pTreadParams->syncSaveCnt;
-						currFrame.id = cnt;
+						if (saveCnt != pTreadParams->syncSaveCnt)
+						{
+							saveCnt = pTreadParams->syncSaveCnt;
+							currFrame.id = cnt;
+							currFrame.isSave = 1;
+							queue.enqueue(currFrame);
+							++cnt;
+						}
+					}
+					else
+					{
+						currFrame.id = pRequest->infoFrameID.read();
 						currFrame.isSave = 1;
 						queue.enqueue(currFrame);
 						++cnt;
 					}
 				}
-
+				else
+				{
+					if (pTreadParams->mvCapParams.isCaptureContinuous == 1)
+					{
+						currFrame.id = pRequest->infoFrameID.read();
+						currFrame.isSave = 1;
+						queue.enqueue(currFrame);
+						++cnt;
+					}
+					else
+					{
+						if (saveCnt != pTreadParams->syncSaveCnt)
+						{
+							saveCnt = pTreadParams->syncSaveCnt;
+							currFrame.id = cnt;
+							currFrame.isSave = 1;
+							queue.enqueue(currFrame);
+							++cnt;
+						}
+					}
+				}
 #if DISPLAY
 				cv::resize(currFrame.data, srcResize, cv::Size(640, 480), 0, 0, CV_INTER_LINEAR);
 				//currFrame.data.copyTo(srcResize);
@@ -169,7 +197,7 @@ unsigned int imageAcquisitionThread(void* pData, unsigned int camID,
 				varLapLSS << "VarOfLapL= " << std.val[0] * std.val[0];
 				cv::putText(srcResize, varLapLSS.str(),
 					cvPoint(50, 50), CV_FONT_HERSHEY_COMPLEX_SMALL,
-					2, cv::Scalar(255, 255, 255), 2, CV_AA);
+					2, cv::Scalar(255, 0, 0), 2, CV_AA);
 #endif
 
 #if DISPLAY

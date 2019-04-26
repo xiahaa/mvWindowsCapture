@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -31,7 +31,7 @@ do{ \
 	} \
 	else \
 	{ \
-		printf("No this config in mvCapture.json!!!!!\n"); \
+		printf("No this config %s in mvCapture.json!!!!!\n",#name); \
 	} \
 }while(0)
 
@@ -81,9 +81,19 @@ do{ \
 	FIND_AND_CONFIGURE_DIGITAL_ITEM(listDevices);
 	FIND_AND_CONFIGURE_DIGITAL_ITEM(isCaptureContinuous);
 
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(axisSet);
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(doAxisSet);
+
 	/* for string item */
 	FIND_AND_CONFIGURE_STRING_ITEM(gnssPortname);
 	FIND_AND_CONFIGURE_STRING_ITEM(outdir);
+	FIND_AND_CONFIGURE_STRING_ITEM(axisFile);
+
+	/* for double item */
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(innerdiameter);
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(outterdiameter);
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(dimx);
+	FIND_AND_CONFIGURE_DIGITAL_ITEM(dimy);
 
 	return true;
 }

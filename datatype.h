@@ -15,6 +15,8 @@ enum __CAMERA_RUNNING_MODE {
 	MONOCULAR = 1,
 	STEREO = 2,
 	ARUCO = 3,
+	CIRCULAR_PATTERN = 4,
+	NUM_MODE,
 };
 
 //-----------------------------------------------------------------------------
@@ -182,6 +184,14 @@ public:
 	std::string gnssPortname;
 	std::string outdir;
 
+	float innerdiameter;
+	float outterdiameter;
+	std::string axisFile;
+	float dimx;
+	float dimy;
+	bool axisSet;
+	bool doAxisSet;
+
 	__mvCaptureParams_t(void):
 		captureMode(STEREO),
 		masterId(0),
@@ -207,7 +217,9 @@ public:
 		bmpEnabled(false), 
 		displayStatsEnabled(true),
 		writeLogEnabled(true), extSyncEnabled(false), autoExposureEnabled(true),
-		outdir(BASE_DIR), gnssPortname()
+		outdir(BASE_DIR), gnssPortname(),
+		innerdiameter(0.047), outterdiameter(0.114), axisFile(),
+		axisSet(false), dimx(0.100 + 0.114), dimy(0.211 + 0.114), doAxisSet(false)
 		{}
 
 	void print(void) {
@@ -240,6 +252,13 @@ public:
 			"listDevices: " + (listDevices ? "enbale" : "disable") + "\n" + \
 			"gnssPortname: " + gnssPortname + "\n" + \
 			"outdir: " + outdir + "\n" + \
+			"inner diameter: " + std::to_string(innerdiameter) + "\n" + \
+			"outter diameter: " + std::to_string(outterdiameter) + "\n" + \
+			"axisFile: " + axisFile + "\n" + \
+			"axisSet: " + (axisSet?"Yes":"No") + "\n" + \
+			"dimx: " + std::to_string(dimx) + "\n" + \
+			"dimy: " + std::to_string(dimy) + "\n" + \
+			"doAxisSet: "+(doAxisSet?"Yes":"No")+"\n" + \
 			"********************************************************" + "\n";
 		;
 		printf("%s\n", str.c_str());

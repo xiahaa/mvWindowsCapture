@@ -1,13 +1,13 @@
 {
 	"captureMode": {
-		"description": "1-monocular, 2-stereo, default is 1.",
+		"description": "1-monocular, 2-stereo, 4-circular_pattern_test default is 1.",
 		"type": "int",
 		"value": 1
 	},
 	"isCaptureContinuous": {
 		"description": "1-continuous capture, 0-manual capture: press 'S' to capture, default is 1.",
 		"type": "int",
-		"value": 1
+		"value": 0
 	},
 	"listDevices": {
 		"description": "Enable(1)/Disable(0) display devices available, default is 1.",
@@ -27,12 +27,12 @@
 	"expTime_us": {
 		"description": "Manually set exposure time in uS, only work when auto-exposure is disabled, default is 30000 uS.",
 		"type": "int",
-		"value": 30000
+		"value": 50000
 	},
 	"expTimeMax_us": {
 		"description": "Maximum exposure time, in uS, work when auto-exposure is enabled, default is 100000 uS.",
 		"type": "int",		
-		"value": 50000
+		"value": 200000
 	},
 	"masterId": {
 		"description": "Master ID, default is 0.",
@@ -62,7 +62,7 @@
 	"triggerFrequency_Hz": {
 		"description": "Image capture frame rate (Hz), default is 10.",
 		"type": "int",
-		"value": 1
+		"value": 10
 	},
 	"nImagePairs": {
 		"description": "Number of image pairs to acquire, default is 0(continuous).",
@@ -82,7 +82,7 @@
 	"bmpEnabled": {
 		"description": "Storage to BMP files enabled.0-save png file, 1-save bmp file. Default is 0.",
 		"type": "int",
-		"value": 1
+		"value": 0
 	},
 	"logInterval": {
 		"description": "Logging interval. Default is 10.",
@@ -128,5 +128,40 @@
 		"description": "automatical save image(1) or manual save image(0), default is 1.",
 		"type": "int",
 		"value": 1
+	},
+	"innerdiameter": {
+		"description": "Inner diameter of circular pattern, in meters.",
+		"type": "double",
+		"value": 0.047
+	},
+	"outterdiameter": {
+		"description": "Outter diameter of circular pattern, in meters.",
+		"type": "double",
+		"value": 0.114
+	},	
+	"axisFile": {
+		"description": "axis setting file.",
+		"type": "string",
+		"value": "C:/Users/xiahaa/workspace/circular/axis.yml"
+	},
+	"dimx": {
+		"description": "Real length of X axis.",
+		"type": "double",
+		"value": 0.103
+	},
+	"dimy": {
+		"description": "Real length of Y axis.",
+		"type": "double",
+		"value": 0.114
+	},
+	"axisSet": {
+		"description": "If axis has been set, default is 0.",
+		"type": "int",
+		"value": 0
+	},
+	"doAxisSet":{
+		"description": "Do you need to set the axis, default is 0.",
+		"type": "int",
+		"value": 0
 	}
 }
