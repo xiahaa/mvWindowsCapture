@@ -113,7 +113,9 @@ unsigned int imageAcquisitionStereoThread(void* pData, unsigned int camID,
 
 	while (threadRun && run) {
 		// wait for results from the default capture queue
+		//printf("request no. %d\n", requestNr);
 		requestNr = pFI->imageRequestWaitFor(timeout_ms);
+		
 		if (pFI->isRequestNrValid(requestNr)) {
 			pRequest = pFI->getRequest(requestNr);
 			if (pRequest->isOK()) {
@@ -390,7 +392,7 @@ bool startStereoImageAcquisitions(mvStereoCaptureParameters &mvCapHandler, Devic
 #endif
 		cout << "INFO: Acquiring " << mvCapHandler.mvCapParams.nImagePairs << " image pairs..." << endl;
 	}
-	return 0;
+	return true;
 }
 bool endStereoImageAcquisition(mvStereoCaptureParameters &mvCapHandler, DeviceData* pMasterdev, DeviceData* pSlavedev)
 {
